@@ -23,38 +23,100 @@ namespace carlibrary
 
         }
 
-        public void createUpdateInspections()
+        public bool createUpdateInspections(DateTime inspectionDate, string bookingSlotId, int userId)
         {
+            bool updateInsertStatus = false;
 
+            //    check if there is booking within same hour
+            //       if true don't allow update / create
+            //             return false;
+            //       else allow create / update
+            //             return true;
+            //       end if
+
+            CarInspections carInspections = getInspectionsDB(inspectionDate, 0);
+            if (carInspections != null)
+            {
+                if (carInspections.bookingDetails!=null)
+                {
+                    var bookingHour = bookingSlotId.Split('-');
+                    bool userBooksInSameHour = carInspections.bookingDetails.Where(p => (p.slotNo.Substring(9,2) == bookingHour[1]) && (p.bookedBy == userId)).ToList().Count > 0 ? true : false;
+                    if (!userBooksInSameHour)
+                    {
+                        try
+                        {
+                            var indexOf = carInspections.bookingDetails.IndexOf(carInspections.bookingDetails.Where(p => (p.slotNo == bookingSlotId)).First());
+                            carInspections.bookingDetails[indexOf].booked = true;
+                            carInspections.bookingDetails[indexOf].bookedBy = userId;
+                            carInspections.bookingDate = inspectionDate;                        
+                            upsertInspectionsDB(carInspections, inspectionDate);
+                            updateInsertStatus = true;
+                        }
+                        catch (Exception )
+                        {
+
+                        }                        
+                    }
+                }
+                
+            }
+
+            return updateInsertStatus;
         }
 
-        public CarInspections getInspectionsDB(DateTime inspectionDate, int userId)
+        public void upsertInspectionsDB(CarInspections carInspections,DateTime inspectionDate)
         {
-            CarInspections carInspections = new CarInspections();
-
             using (SqlConnection connection = new SqlConnection(DB_Conn))
             {
                 try
                 {
                     connection.Open();
-                    SqlCommand command = new SqlCommand("SELECT id,bookingDetails,bookingDate,createdOn,updatedOn from Inspection WHERE bookingDate = @bookingDate", connection);
+                    SqlCommand command = new SqlCommand("usp_upsert_CarInspection", connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.Add("@bookingDetails", SqlDbType.VarChar).Value =JsonConvert.SerializeObject(carInspections.bookingDetails).ToString();
+                    command.Parameters.Add("@bookingDate", SqlDbType.Date).Value = inspectionDate;
+                    command.CommandTimeout = 5;
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    /*Handle error*/
+                }
+            }
+        }
+
+
+        public CarInspections getInspectionsDB(DateTime inspectionDate, int userId)
+        {
+            CarInspections carInspections = new CarInspections();
+            DataSet dataSet = new DataSet();
+            using (SqlConnection connection = new SqlConnection(DB_Conn))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("SELECT id,bookingDate,bookingDetails,createdOn,updatedOn from Inspection WHERE bookingDate = @bookingDate", connection);
                     command.CommandType = System.Data.CommandType.Text;
                     command.Parameters.Add("@bookingDate", SqlDbType.Date).Value = inspectionDate;
                     command.CommandTimeout = 5;
 
-                    SqlDataReader reader = command.ExecuteReader();
-                    if (reader.HasRows)
+
+                    dataSet.Tables.Clear();
+                    var da = new SqlDataAdapter(command);
+                    da.Fill(dataSet, "Inspection");
+
+                    if (dataSet.Tables[0].Rows.Count > 0)
                     {
-                        while (reader.Read())
+                        foreach (DataRow row in dataSet.Tables[0].Rows)
                         {
-                            //carInspections.id = long.Parse(reader.GetString(0));
-                            carInspections.bookingDate = DateTime.Parse(reader.GetString(1));
-                            carInspections.bookingDetails = JsonConvert.DeserializeObject<List<inspectionDetails>>(reader.GetString(2));
-                            carInspections.createdOn = DateTime.Parse(reader.GetString(3));
-                            carInspections.updatedOn = DateTime.Parse(reader.GetString(4));
+                            carInspections.bookingDate = DateTime.Parse(row[1].ToString());
+                            carInspections.bookingDetails = JsonConvert.DeserializeObject<List<inspectionDetails>>(row[2].ToString());
+                            carInspections.createdOn = DateTime.Parse(row[3].ToString());
+                            carInspections.updatedOn = DateTime.Parse(row[4].ToString()==null? DateTime.Now.ToString("yyyy-MM-dd") : row[4].ToString());
                         }
-                    } else
-                    {
+                    }
+                    else {
                         DayOfWeek daySelected = inspectionDate.DayOfWeek;
                         if (daySelected == DayOfWeek.Sunday)
                         {
@@ -65,10 +127,10 @@ namespace carlibrary
                             carInspections.bookingDetails = createInspectionSlot(inspectionDate);
                             carInspections.createdOn = DateTime.UtcNow;
                             carInspections.updatedOn = DateTime.UtcNow;
-                        }                       
+                        }    
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     /*Handle error*/
                 }

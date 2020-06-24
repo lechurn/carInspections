@@ -24,7 +24,7 @@ BEGIN
 	SET NOCOUNT ON;
 	DECLARE @createdDate DATETIME= GETDATE()
 	UPDATE [Inspection] 
-		SET bookingDetails =@bookingDetails,
+		SET bookingDetails=@bookingDetails,
 			updatedOn = @createdDate
 		WHERE bookingDate= @bookingDate
 	IF @@ROWCOUNT=0
@@ -54,12 +54,12 @@ EXEC [usp_upsert_CarInspection]
 			"timeSlot": "09:00-09:30",
 			"slotNo": "20200627-09-1",
 			"booked": false,
-			"bookedBy": 1
+			"bookedBy": 0
 		},
 		{
 			"timeSlot": "09:00-09:30",
 			"slotNo": "20200627-09-2",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -83,7 +83,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "09:30-10:00",
 			"slotNo": "20200627-09-6",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -107,7 +107,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "10:00-10:30",
 			"slotNo": "20200627-10-10",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -131,7 +131,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "10:30-11:00",
 			"slotNo": "20200627-10-14",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -155,7 +155,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "11:00-11:30",
 			"slotNo": "20200627-11-18",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -179,7 +179,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "11:30-12:00",
 			"slotNo": "20200627-11-22",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -203,7 +203,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "12:00-12:30",
 			"slotNo": "20200627-12-26",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -227,7 +227,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "12:30-13:00",
 			"slotNo": "20200627-12-30",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -251,7 +251,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "13:00-13:30",
 			"slotNo": "20200627-13-34",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -275,7 +275,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "13:30-14:00",
 			"slotNo": "20200627-13-38",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -299,7 +299,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "14:00-14:30",
 			"slotNo": "20200627-14-42",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -323,7 +323,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "14:30-15:00",
 			"slotNo": "20200627-14-46",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -347,7 +347,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "15:00-15:30",
 			"slotNo": "20200627-15-50",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -371,7 +371,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "15:30-16:00",
 			"slotNo": "20200627-15-54",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -395,7 +395,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "16:00-16:30",
 			"slotNo": "20200627-16-58",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -419,7 +419,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "16:30-17:00",
 			"slotNo": "20200627-16-62",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -443,7 +443,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "17:00-17:30",
 			"slotNo": "20200627-17-66",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{
@@ -467,7 +467,7 @@ EXEC [usp_upsert_CarInspection]
 		{
 			"timeSlot": "17:30-18:00",
 			"slotNo": "20200627-17-70",
-			"booked": true,
+			"booked": false,
 			"bookedBy": 0
 		},
 		{

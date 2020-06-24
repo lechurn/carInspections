@@ -142,14 +142,27 @@
                         "bookingSlotId": slotNo.toString(),
                         "userId": userId
                     };
+
+                    const headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    };
                     axios
-                        .post('http://localhost:4663/api/Inspect/GetBooking', {
-                            body: request,
-                            headers : {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            }   
+                        .post('http://localhost:4663/api/Inspect/GetBooking',
+                            request,
+                            headers
+                        )
+                        .then( response => alert(response)
+                        )
+                        .then(response => {
+                            axios
+                              .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=2020-06-27')
+                              .then(response => (this.info = response))
+                              .then(console.log('ubfi ' + this.info))
+                              .catch(error => {
+                                  console.log(error)
+                                  this.errored = true
+                              })
                         })
-                        .then(response => { this.info = response })
                         .then(console.log('post Reponse ' + this.info))
                         .catch(error => {
                             console.log(error)

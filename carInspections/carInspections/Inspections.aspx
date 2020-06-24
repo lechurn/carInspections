@@ -24,20 +24,30 @@
         <section v-else>
             <ul>
                 <li v-for="details in info">
-                    <ul>                        
-                        <li v-for="det in details.bookingDetails">
-                            <div class="d-inline">{{ details.bookingDate}}</div>
-                            <div class="d-inline">
-                                {{ det.timeSlot}}&nbsp;
-                            </div>
-                            <div class="d-inline">
-                                {{ det.slotNo}}
-                            </div>
-                            <div class="d-inline">
-                                {{ det.booked}}
-                            </div>
-                        </li>
-                    </ul>
+                    <table>
+                        <tr>
+                            <th>
+                                Booking Date
+                            </th>
+                            <th>
+                                Time Slot
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                        <tr v-for="det in details.bookingDetails">
+                            <td>
+                                {{ details.bookingDate | formatDate}}
+                            </td>
+                            <td>
+                                {{ det.timeSlot}}
+                            </td>
+                            <td>
+                               <button class="btn">Book this Slot</button>    
+                            </td>
+                        </tr>
+                    </table>
                 </li>
             </ul>
         </section>
@@ -45,6 +55,7 @@
     </form>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha256-ZsWP0vT+akWmvEMkNYgZrPHKU9Ke8nYBPC3dqONp1mY=" crossorigin="anonymous"></script>
     <script>
         new Vue({
             el: '#app',
@@ -63,6 +74,11 @@
                       console.log(error)
                       this.errored = true
                   })
+            },
+            filters: {
+                formatDate: function (value) {
+                    return moment(String(value)).format('DD/MMM/YYYY')
+                }
             }
         })
     </script>

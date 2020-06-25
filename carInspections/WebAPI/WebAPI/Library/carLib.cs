@@ -235,7 +235,7 @@ namespace carlibrary
         {
             bool passedDate = false;
 
-            if (inspectionDate < DateTime.Now)
+            if (inspectionDate < DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd 00:00")))
             {
                 passedDate = true;
             }

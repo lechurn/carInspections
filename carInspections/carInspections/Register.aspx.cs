@@ -13,7 +13,6 @@ namespace carInspections
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            btnSign.Visible = false;
         }
 
         protected void btnRegister_Click(object sender, EventArgs e)
@@ -22,9 +21,7 @@ namespace carInspections
 
             if ((carFELib.registerAccount(txtUsername.Text, hashPassword)) > 0)
             {
-                errorMessage.Text = "Account Registered";
-                btnSign.Visible = true;
-                
+                errorMessage.Text = "Account Registered";               
             }
             else
             {

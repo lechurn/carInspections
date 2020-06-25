@@ -11,7 +11,14 @@ namespace carInspections
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["userId"].ToString() == null)
+            {
+                Response.Redirect("~/SignIn.aspx");
+            }
+            else
+            {
+                hfUserId.Value = Session["userId"].ToString();
+            }
         }
     }
 }

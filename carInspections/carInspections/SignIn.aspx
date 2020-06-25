@@ -41,6 +41,11 @@
                                         <asp:Button ID="btnLogin" runat="server" Text="Login"  CssClass="btn" OnClick="btnLogin_Click"/>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <asp:Label ID="errorMessage" runat="server"></asp:Label>
+                                    </div>
+                                </div>
                             </div>                    
                         </div>
                     </div>

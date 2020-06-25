@@ -22,11 +22,12 @@ namespace carInspections
 
             if ((carFELib.registerAccount(txtUsername.Text, hashPassword)) > 0)
             {
-                Response.Write("Account Registered");
+                errorMessage.Text = "Account Registered";
+                Response.Redirect("~/SignIn.aspx");
             }
             else
             {
-                Response.Write("Error in creating user account");
+                errorMessage.Text = "Error in creating user account";
             }
 
         }

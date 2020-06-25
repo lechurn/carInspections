@@ -52,7 +52,7 @@ namespace carInspections
 
             userModel userModel = getUser(username);
 
-            if (userModel != null)
+            if (userModel.userId != 0)
             {
                 bool isValidPassword = BCrypt.Net.BCrypt.Verify(password, userModel.password);
                 if (isValidPassword)
@@ -74,7 +74,7 @@ namespace carInspections
                 try
                 {
                     connection.Open();
-                    SqlCommand command = new SqlCommand("SELECT id,userName,password from User WHERE userName = @username", connection);
+                    SqlCommand command = new SqlCommand("SELECT id,userName,password from [User] WHERE userName = @username", connection);
                     command.CommandType = System.Data.CommandType.Text;
                     command.Parameters.Add("@username", SqlDbType.VarChar).Value = username;
                     command.CommandTimeout = 5;

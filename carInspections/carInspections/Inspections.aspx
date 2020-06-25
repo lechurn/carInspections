@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Inspections.aspx.cs" Inherits="carInspections.Inspections" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Inspections.aspx.cs" Inherits="carInspections.Inspections" %>
 
 <!DOCTYPE html>
 
@@ -37,7 +37,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-
+        <asp:HiddenField ID="hfUserId" runat="server" />
     </form>
         <div id="app">
              <div>
@@ -76,7 +76,7 @@
                                     {{ det.timeSlot}}
                                 </td>
                                 <td class="pad-4x">
-                                     <button class="btn-book rounded-corners" v-if='!det.booked' v-on:click="bookSlot(details.bookingDate,det.slotNo,1)">Book this slot </button>                                                                                                                                                
+                                     <button class="btn-book rounded-corners" v-if='!det.booked' v-on:click="bookSlot(details.bookingDate,det.slotNo)">Book this slot </button>                                                                                                                                                
                                 </td>
                             </tr>
                         </table>
@@ -144,8 +144,9 @@
                           this.errored = true
                       })
                 },
-                bookSlot: function (bookingDate,slotNo,userId) {
+                bookSlot: function (bookingDate,slotNo) {
                     console.log('You have selected ' + moment(String(bookingDate)).format('YYYY-MMM-DD') + ' Slot : ' + slotNo);
+                    var userId = document.getElementById('<%= hfUserId.ClientID%>').value;
                     var request = {
                         "bookingDate": moment(String(bookingDate)).format('YYYY-MM-DD').toString(),
                         "bookingSlotId": slotNo.toString(),

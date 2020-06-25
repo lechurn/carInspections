@@ -9,6 +9,8 @@ namespace carInspections.WebPages
 {
     public partial class SignIn : System.Web.UI.Page
     {
+        carFELib carFELib = new carFELib();
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -16,29 +18,17 @@ namespace carInspections.WebPages
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            if (validateUser(txtUsername.Text,txtPassword.Text))
+            userValidateReponse userValidateResponse = carFELib.validateUser(txtUsername.Text, txtPassword.Text);
+
+            if (userValidateResponse.isValidUser)
             {
+                Session["userId"] = userValidateResponse.userId;
                 Response.Redirect("~/Inspections.aspx");
-            }else
+            }
+            else
             {
-                Response.Write("Invalid User");
+                errorMessage.Text = "Invalid User";
             }
         }
-
-
-        private bool validateUser(string username, string password)
-        {
-            bool validUser = false;
-            
-            if (username=="0" && password =="0")
-            {
-                string userId = "1";
-                Session["userId"] = userId;
-                validUser = true;
-            }
-                    
-            return validUser;
-        }
-
     }
 }

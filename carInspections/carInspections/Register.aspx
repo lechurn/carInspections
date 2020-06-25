@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="carInspections.Register" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="carInspections.Register" %>
 
 <!DOCTYPE html>
 
@@ -32,6 +32,11 @@
                     <div class="form-group">
                         <div class="input-group">
                             <asp:Button ID="btnRegister" runat="server" Text="Register" OnClick="btnRegister_Click"></asp:Button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <asp:Label ID="errorMessage" runat="server"></asp:Label>
                         </div>
                     </div>
                 </div>

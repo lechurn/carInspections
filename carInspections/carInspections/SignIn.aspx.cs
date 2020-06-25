@@ -13,5 +13,32 @@ namespace carInspections.WebPages
         {
 
         }
+
+        protected void btnLogin_Click(object sender, EventArgs e)
+        {
+            if (validateUser(txtUsername.Text,txtPassword.Text))
+            {
+                Response.Redirect("~/Inspections.aspx");
+            }else
+            {
+                Response.Write("Invalid User");
+            }
+        }
+
+
+        private bool validateUser(string username, string password)
+        {
+            bool validUser = false;
+            
+            if (username=="0" && password =="0")
+            {
+                string userId = "1";
+                Session["userId"] = userId;
+                validUser = true;
+            }
+                    
+            return validUser;
+        }
+
     }
 }

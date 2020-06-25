@@ -21,7 +21,7 @@
                                     &nbsp;                         
                             </div>
                             <div class="col-4">
-                                 <asp:Button ID="btnSignOut" runat="server" Text="Sign Out"  CssClass="btn btn-link"/>
+
                             </div>
                         </div>
                         <div class="row justify-content-center align-items-center pt-5">        

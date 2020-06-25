@@ -169,6 +169,7 @@
     </Compile>
     <Compile Include="Library\carLib.cs" />
     <Compile Include="Models\BookInspectionReq.cs" />
+    <Compile Include="Models\errorType\CreateUpdateInspectErrorType.cs" />
     <Compile Include="Models\InspectionDetails.cs" />
     <Compile Include="Models\CarInspections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

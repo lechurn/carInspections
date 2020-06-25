@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using carlibrary;
 using System.Web.Http.Cors;
+using WebAPI.Models.errorType;
 
 namespace WebAPI.Controllers
 {
@@ -30,19 +31,24 @@ namespace WebAPI.Controllers
             DateTime dateTime2;
 
             if (DateTime.TryParse(request.bookingDate, out dateTime2)) {
-                if (carUtil.createUpdateInspections(DateTime.Parse(request.bookingDate), request.bookingSlotId, request.userId))
+                string createUpdateResponse = carUtil.createUpdateInspections(DateTime.Parse(request.bookingDate), request.bookingSlotId, request.userId);
+
+
+                if (createUpdateResponse == CreateUpdateInspectErrorType.USER_BOOK_SAME_HOUR)
                 {
-                    return Json("Booking Created");
+                    return Json(CreateUpdateInspectErrorType.USER_BOOK_SAME_HOUR);
                 }
-                else
+                else if (createUpdateResponse == CreateUpdateInspectErrorType.UNABLE_CREATE_UPDATE)
                 {
-                    return Json("Unable to Create Booking");
-                }
-                
+                    return Json(CreateUpdateInspectErrorType.UNABLE_CREATE_UPDATE);
+                }else
+                {
+                    return Json(CreateUpdateInspectErrorType.CREATE_UPDATE_SUCCESSFUL);
+                }                
             }
             else
             {
-                return BadRequest("Invalid Date");
+                return BadRequest(CreateUpdateInspectErrorType.INVALID_DATE);
             }
 
             

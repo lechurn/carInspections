@@ -201,7 +201,7 @@ namespace carlibrary
                 {
                     inspectionsList.Add(new inspectionDetails
                     {
-                        booked = checkInspectionGreaterThan3Weeks(inspectionDate) ?  true : false,
+                        booked = validateBookingCondition(inspectionDate),
                         timeSlot = String.Format("{0}-{1}", startDate.ToString("HH:mm"), startDate.AddMinutes(30).ToString("HH:mm")),
                         slotNo = string.Format("{0}-{1}-{2}", startDate.ToString("yyyyMMdd"), startDate.ToString("HH"), slotNoCtr)
                     });
@@ -214,11 +214,40 @@ namespace carlibrary
             return inspectionsList;
         }
 
+        private bool validateBookingCondition(DateTime inspectionDate)
+        {
+            bool bookingStatus = false;
+
+            if (checkInspectionHasPassed(inspectionDate))
+            {
+                bookingStatus = true;
+            }
+
+            if (checkInspectionGreaterThan3Weeks(inspectionDate))
+            {
+                bookingStatus = true;
+            }
+
+            return bookingStatus;
+        }
+
+        private bool checkInspectionHasPassed(DateTime inspectionDate)
+        {
+            bool passedDate = false;
+
+            if (inspectionDate < DateTime.Now)
+            {
+                passedDate = true;
+            }
+
+            return passedDate;
+        }
+
         private bool checkInspectionGreaterThan3Weeks(DateTime inspectionDate)
         {
             bool greaterThan3Weeks = false;
 
-            if (inspectionDate <= DateTime.Now.AddDays(21))
+            if (inspectionDate > DateTime.Now.AddDays(21))
             {
                 greaterThan3Weeks = true;
             }

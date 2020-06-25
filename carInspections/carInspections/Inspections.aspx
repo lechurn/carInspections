@@ -40,40 +40,13 @@
 
     </form>
         <div id="app">
+             <div>
+                 <vuejs-datepicker placeholder="Click here to select a date" disabled-dates="state.disabledDates" :highlighted="state.highlighted" @selected="dateSelected" ></vuejs-datepicker>
+             </div>
         <section v-if="errored">
             <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
         </section>
         <section v-else>
-            <ul style="display:none;">
-                <li v-for="details in info">
-                    <table>
-                        <tr>
-                            <th>
-                                Booking Date
-                            </th>
-                            <th>
-                                Time Slot
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
-                        <tr v-for="det in details.bookingDetails">
-                            <td>
-                                {{ details.bookingDate | formatDate}}
-                            </td>
-                            <td>
-                                {{ det.timeSlot}}
-                            </td>
-                            <td>
-                               <button class="btn">Book this Slot</button>    
-                            </td>
-                        </tr>
-                    </table>
-                </li>
-            </ul>
-
-
             <table>
                 <thead>
                     <td>                        
@@ -86,7 +59,7 @@
                                     Time Slot
                                 </td>
                                 <td>
-                                    Action
+                                    &nbsp;&nbsp;&nbsp;Action&nbsp;&nbsp;
                                 </td>
                             </thead>
                         </table>
@@ -115,7 +88,19 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha256-ZsWP0vT+akWmvEMkNYgZrPHKU9Ke8nYBPC3dqONp1mY=" crossorigin="anonymous"></script>
+    <!--Font Awesome-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js" integrity="sha256-HkXXtFRaflZ7gjmpjGQBENGnq8NIno4SDNq/3DbkMgo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
+    <script src="https://unpkg.com/vuejs-datepicker"></script>
+
     <script>
+        var state = {
+            disabledDates: {
+                days: [0], // Disable Saturday's and Sunday
+            },            
+        };
+
         new Vue({
             el: '#app',
             data () {
@@ -124,17 +109,41 @@
                     errored : false
                 }
             },
+            components: {
+                vuejsDatepicker
+            },
             mounted () {
-                axios
-                  .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=2020-06-27')
-                  .then(response => (this.info = response))
-                  .then(console.log('ubfi ' + this.info))
-                  .catch(error => {
-                      console.log(error)
-                      this.errored = true
-                  })
             },
             methods: {
+                dateSelected: function(date) {
+                    var bBookingDate = moment(String(date)).format('YYYY-MM-DD').toString();
+
+                    const dayOfWeek = moment(date).day();
+                    if (dayOfWeek == 0) {
+                        alert('No Inspections on Sunday');
+                    } else {
+                        axios
+                          .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=' + bBookingDate)
+                          .then(response => (this.info = response))
+                          .catch(error => {
+                              console.log(error)
+                              this.errored = true
+                          })
+                    }
+
+                },
+                checkSlot: function (bookingDate) {
+                    var bBookingDate = moment(String(bookingDate)).format('YYYY-MM-DD').toString();
+
+                    axios
+                      .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=' + bBookingDate)
+                      .then(response => (this.info = response))
+                      .then(console.log('ubfi ' + this.info))
+                      .catch(error => {
+                          console.log(error)
+                          this.errored = true
+                      })
+                },
                 bookSlot: function (bookingDate,slotNo,userId) {
                     console.log('You have selected ' + moment(String(bookingDate)).format('YYYY-MMM-DD') + ' Slot : ' + slotNo);
                     var request = {
@@ -151,13 +160,14 @@
                             request,
                             headers
                         )
-                        .then( response => alert(response)
+                        .then( response => 
+                            //console.log(response.data)
+                            alert(response.data)
                         )
                         .then(response => {
                             axios
                               .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=2020-06-27')
                               .then(response => (this.info = response))
-                              .then(console.log('ubfi ' + this.info))
                               .catch(error => {
                                   console.log(error)
                                   this.errored = true

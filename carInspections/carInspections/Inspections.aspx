@@ -31,7 +31,7 @@
         }
 
         .rounded-corners {
-            border-radius:8px;
+            border-radius:5px;
         }
     </style>
 </head>
@@ -39,52 +39,68 @@
     <form id="form1" runat="server">
         <asp:HiddenField ID="hfUserId" runat="server" />
     </form>
-        <div id="app">
-             <div>
-                 <vuejs-datepicker placeholder="Click here to select a date" disabled-dates="state.disabledDates" :highlighted="state.highlighted" @selected="dateSelected" ></vuejs-datepicker>
-             </div>
-        <section v-if="errored">
-            <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
-        </section>
-        <section v-else>
-            <table>
-                <thead>
-                    <td>                        
-                        <table>
-                            <thead>
-                                <td>
-                                    Booking Date
-                                </td>
-                                <td>
-                                    Time Slot
-                                </td>
-                                <td>
-                                    &nbsp;&nbsp;&nbsp;Action&nbsp;&nbsp;
-                                </td>
-                            </thead>
-                        </table>
-                    </td>
-                </thead>
-                <tr v-for="details in info">
-                    <td>
-                        <table style="border-collapse:collapse;">
-                            <tr v-for="det in details.bookingDetails" class="table-row-odd-even">
-                                <td class="pad-4x">
-                                     {{ details.bookingDate | formatDate}}&nbsp;&nbsp;&nbsp;
-                                </td>
-                                <td>
-                                    {{ det.timeSlot}}
-                                </td>
-                                <td class="pad-4x">
-                                     <button class="btn-book rounded-corners" v-if='!det.booked' v-on:click="bookSlot(details.bookingDate,det.slotNo)">Book this slot </button>                                                                                                                                                
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </section>
-    </div>
+                        <div class="container h-100">                            
+                            <div class="row justify-content-center align-items-center pt-5">                                   
+                                <div id="app">
+                                     <div>
+                                         <table style="border:none;border-collapse:collapse;">
+                                             <tr>
+                                                 <td>
+                                                     <vuejs-datepicker placeholder="Click here to select a date" disabled-dates="state.disabledDates" :highlighted="state.highlighted" @selected="dateSelected" ></vuejs-datepicker>
+                                                 </td>
+                                                 <td>
+                                                     <button class="btn btn-link" @onclick="SignOut">Sign Out</button>
+                                                 </td>
+                                             </tr>
+                                         </table>                                                                                  
+                                     </div>
+                                <section v-if="errored">
+                                    <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+                                </section>
+                                <section v-else>
+                                    <table>
+                                        <thead>
+                                            <td>                        
+                                                <table>
+                                                    <thead>
+                                                        <td>
+                                                            Booking Date
+                                                        </td>
+                                                        <td>
+                                                            Time Slot
+                                                        </td>
+                                                        <td>
+                                                            &nbsp;&nbsp;&nbsp;Action&nbsp;&nbsp;
+                                                        </td>
+                                                    </thead>
+                                                </table>
+                                            </td>
+                                        </thead>
+                                        <tr v-for="details in info">
+                                            <td>
+                                                <table style="border-collapse:collapse;">
+                                                    <tr v-for="det in details.bookingDetails" class="table-row-odd-even">
+                                                        <td class="pad-4x">
+                                                             {{ details.bookingDate | formatDate}}&nbsp;&nbsp;&nbsp;
+                                                        </td>
+                                                        <td>
+                                                            {{ det.timeSlot}}
+                                                        </td>
+                                                        <td class="pad-4x">
+                                                             <button class="btn-book rounded-corners" v-if='!det.booked' v-on:click="bookSlot(details.bookingDate,det.slotNo)">Book this slot </button>                                                                                                                                                
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </section>
+                            </div>
+                            </div>
+                        </div>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha256-ZsWP0vT+akWmvEMkNYgZrPHKU9Ke8nYBPC3dqONp1mY=" crossorigin="anonymous"></script>
@@ -115,6 +131,9 @@
             mounted () {
             },
             methods: {
+                SignOut:function(){
+                    window.location.href = "/SignIn.aspx";
+                },
                 dateSelected: function(date) {
                     var bBookingDate = moment(String(date)).format('YYYY-MM-DD').toString();
 
@@ -131,18 +150,6 @@
                           })
                     }
 
-                },
-                checkSlot: function (bookingDate) {
-                    var bBookingDate = moment(String(bookingDate)).format('YYYY-MM-DD').toString();
-
-                    axios
-                      .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=' + bBookingDate)
-                      .then(response => (this.info = response))
-                      .then(console.log('ubfi ' + this.info))
-                      .catch(error => {
-                          console.log(error)
-                          this.errored = true
-                      })
                 },
                 bookSlot: function (bookingDate,slotNo) {
                     console.log('You have selected ' + moment(String(bookingDate)).format('YYYY-MMM-DD') + ' Slot : ' + slotNo);

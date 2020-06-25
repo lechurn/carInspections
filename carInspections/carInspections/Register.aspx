@@ -10,10 +10,33 @@
     <script src="bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <form id="form1" runat="server">
-    <div>
-    
-    </div>
+<form id="form1" runat="server">
+        <div class="container h-100">
+            <div class="row justify-content-center align-items-center pt-5">     
+                <div class="col-offset-4 col-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <asp:TextBox ID="txtUsername" runat="server" placeholder="Username"></asp:TextBox>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <div class="input-group">
+                            <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="form-group d-none">
+                        <div class="input-group">
+                            <asp:TextBox ID="txtCfmPassword" runat="server" TextMode="Password"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <asp:Button ID="btnRegister" runat="server" Text="Register" OnClick="btnRegister_Click"></asp:Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
     </form>
 </body>
 </html>

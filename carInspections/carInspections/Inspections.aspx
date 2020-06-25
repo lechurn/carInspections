@@ -33,6 +33,10 @@
         .rounded-corners {
             border-radius:5px;
         }
+
+        .width-5 {
+            width:5rem;
+        }
     </style>
 </head>
 <body>
@@ -49,7 +53,7 @@
                                                      <vuejs-datepicker placeholder="Click here to select a date" disabled-dates="state.disabledDates" :highlighted="state.highlighted" @selected="dateSelected" ></vuejs-datepicker>
                                                  </td>
                                                  <td>
-                                                     <button class="btn btn-link" @onclick="SignOut">Sign Out</button>
+                                                     <button class="btn btn-link" v-on:click="SignOut">Sign Out</button>
                                                  </td>
                                              </tr>
                                          </table>                                                                                  
@@ -86,8 +90,8 @@
                                                         <td>
                                                             {{ det.timeSlot}}
                                                         </td>
-                                                        <td class="pad-4x">
-                                                             <button class="btn-book rounded-corners" v-if='!det.booked' v-on:click="bookSlot(details.bookingDate,det.slotNo)">Book this slot </button>                                                                                                                                                
+                                                        <td class="pad-4x width-5">
+                                                             <button class="btn-book rounded-corners" v-if='!det.booked' v-on:click="bookSlot(details.bookingDate,det.slotNo)">Book Slot? </button>                                                                                                                                                
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -109,6 +113,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
 
     <script src="https://unpkg.com/vuejs-datepicker"></script>
+    <!--Sweet Alert2-->
+    <script src="https://cdn.jsdelivr.net/npm/vue-sweetalert2-component@1.0.1/dist/vue-sweetalert2-component.min.js"></script>
 
     <script>
         var state = {
@@ -126,7 +132,8 @@
                 }
             },
             components: {
-                vuejsDatepicker
+                vuejsDatepicker,
+                VueSweetAlert2Component
             },
             mounted () {
             },
@@ -139,7 +146,7 @@
 
                     const dayOfWeek = moment(date).day();
                     if (dayOfWeek == 0) {
-                        alert('No Inspections on Sunday');
+                        alert('No Inspections on Sunday'); 
                     } else {
                         axios
                           .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=' + bBookingDate)
@@ -174,7 +181,7 @@
                         )
                         .then(response => {
                             axios
-                              .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=2020-06-27')
+                              .get('http://localhost:4663/api/Inspect/GetBooking?bookingDate=' + moment(String(bookingDate)).format('YYYY-MM-DD').toString())
                               .then(response => (this.info = response))
                               .catch(error => {
                                   console.log(error)

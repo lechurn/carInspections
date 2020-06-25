@@ -52,7 +52,7 @@ namespace carInspections
 
             userModel userModel = getUser(username);
 
-            if (userModel.userId != 0)
+            if (userModel.userId > 0)
             {
                 bool isValidPassword = BCrypt.Net.BCrypt.Verify(password, userModel.password);
                 if (isValidPassword)

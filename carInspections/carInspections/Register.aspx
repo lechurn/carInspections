@@ -37,6 +37,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <asp:Label ID="errorMessage" runat="server"></asp:Label>
+                            <asp:Button ID="btnSign" runat="server" CssClass="btn btn-link" Text="Click here to Sign In" OnClick="btnSign_Click"></asp:Button>
                         </div>
                     </div>
                 </div>

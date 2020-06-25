@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WebAPI.Models.errorType;
 using WebAPI.Properties;
 namespace carlibrary
 {
@@ -23,7 +24,52 @@ namespace carlibrary
 
         }
 
-        public bool createUpdateInspections(DateTime inspectionDate, string bookingSlotId, int userId)
+        public string createUpdateInspections(DateTime inspectionDate, string bookingSlotId, int userId)
+        {
+            string response = CreateUpdateInspectErrorType.UNABLE_CREATE_UPDATE;
+
+            //    check if there is booking within same hour
+            //       if true don't allow update / create
+            //             return false;
+            //       else allow create / update
+            //             return true;
+            //       end if
+
+            CarInspections carInspections = getInspectionsDB(inspectionDate, 0);
+            if (carInspections != null)
+            {
+                if (carInspections.bookingDetails != null)
+                {
+                    var bookingHour = bookingSlotId.Split('-');
+                    bool userBooksInSameHour = carInspections.bookingDetails.Where(p => (p.slotNo.Substring(9, 2) == bookingHour[1]) && (p.bookedBy == userId)).ToList().Count > 0 ? true : false;
+                    if (!userBooksInSameHour)
+                    {
+                        try
+                        {
+                            var indexOf = carInspections.bookingDetails.IndexOf(carInspections.bookingDetails.Where(p => (p.slotNo == bookingSlotId)).First());
+                            carInspections.bookingDetails[indexOf].booked = true;
+                            carInspections.bookingDetails[indexOf].bookedBy = userId;
+                            carInspections.bookingDate = inspectionDate;
+                            upsertInspectionsDB(carInspections, inspectionDate);
+                            response = CreateUpdateInspectErrorType.CREATE_UPDATE_SUCCESSFUL;
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }else
+                    {
+                        response = CreateUpdateInspectErrorType.USER_BOOK_SAME_HOUR;
+                    }
+                }
+
+            }
+
+            return response;
+        }
+
+
+        public bool createUpdateInspections0(DateTime inspectionDate, string bookingSlotId, int userId)
         {
             bool updateInsertStatus = false;
 
@@ -155,7 +201,7 @@ namespace carlibrary
                 {
                     inspectionsList.Add(new inspectionDetails
                     {
-                        booked = false,
+                        booked = checkInspectionGreaterThan3Weeks(inspectionDate) ?  true : false,
                         timeSlot = String.Format("{0}-{1}", startDate.ToString("HH:mm"), startDate.AddMinutes(30).ToString("HH:mm")),
                         slotNo = string.Format("{0}-{1}-{2}", startDate.ToString("yyyyMMdd"), startDate.ToString("HH"), slotNoCtr)
                     });
@@ -166,6 +212,18 @@ namespace carlibrary
             }
 
             return inspectionsList;
+        }
+
+        private bool checkInspectionGreaterThan3Weeks(DateTime inspectionDate)
+        {
+            bool greaterThan3Weeks = false;
+
+            if (inspectionDate <= DateTime.Now.AddDays(21))
+            {
+                greaterThan3Weeks = true;
+            }
+            
+            return greaterThan3Weeks;
         }
     }
 }

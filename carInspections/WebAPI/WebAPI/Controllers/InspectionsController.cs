@@ -36,14 +36,17 @@ namespace WebAPI.Controllers
 
                 if (createUpdateResponse == CreateUpdateInspectErrorType.USER_BOOK_SAME_HOUR)
                 {
-                    return Json(CreateUpdateInspectErrorType.USER_BOOK_SAME_HOUR);
+                    //return Json(CreateUpdateInspectErrorType.USER_BOOK_SAME_HOUR);
+                    return Json("Not Allowed to Book the same hour");
                 }
                 else if (createUpdateResponse == CreateUpdateInspectErrorType.UNABLE_CREATE_UPDATE)
                 {
-                    return Json(CreateUpdateInspectErrorType.UNABLE_CREATE_UPDATE);
+                    //return Json(CreateUpdateInspectErrorType.UNABLE_CREATE_UPDATE);
+                    return Json("An errpr has occurred.Not Allowed to Book.Try again in 5 minutes");
                 }else
                 {
-                    return Json(CreateUpdateInspectErrorType.CREATE_UPDATE_SUCCESSFUL);
+                    //return Json(CreateUpdateInspectErrorType.CREATE_UPDATE_SUCCESSFUL);
+                    return Json("Booking created successfully");
                 }                
             }
             else
